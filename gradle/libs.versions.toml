@@ -11,7 +11,6 @@ composeBom = "2024.09.02"
 desugar-jdk-libs = "2.1.2"
 ktor = "2.3.12"
 koin = "3.5.6"
-coilCompose = "2.7.0"
 material3-adaptive = "1.0.0"
 compose-material-icons-extended = "1.7.2"
 
