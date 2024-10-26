@@ -16,7 +16,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plcoding.cryptotracker.core.presentation.util.ObserveAsEvents
 import com.plcoding.cryptotracker.core.presentation.util.toString
 import com.plcoding.cryptotracker.crypto.presentation.coin_detail.CoinDetailScreen
-import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListAction
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListEvent
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListScreen
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListViewModel
@@ -29,8 +28,9 @@ fun AdaptiveCoinListDetailPane(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
     ObserveAsEvents(events = viewModel.events) { event ->
-        when(event) {
+        when (event) {
             is CoinListEvent.Error -> {
                 Toast.makeText(
                     context,
@@ -38,26 +38,18 @@ fun AdaptiveCoinListDetailPane(
                     Toast.LENGTH_LONG
                 ).show()
             }
+
+            is CoinListEvent.NavigateToDetails -> navigator.navigateTo(pane = ListDetailPaneScaffoldRole.Detail)
         }
     }
 
-    val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
     NavigableListDetailPaneScaffold(
         navigator = navigator,
         listPane = {
             AnimatedPane {
                 CoinListScreen(
                     state = state,
-                    onAction = { action ->
-                        viewModel.onAction(action)
-                        when(action) {
-                            is CoinListAction.OnCoinClick -> {
-                                navigator.navigateTo(
-                                    pane = ListDetailPaneScaffoldRole.Detail
-                                )
-                            }
-                        }
-                    }
+                    actions = viewModel
                 )
             }
         },

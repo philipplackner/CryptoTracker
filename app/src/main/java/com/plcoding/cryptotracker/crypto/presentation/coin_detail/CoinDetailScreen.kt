@@ -36,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,12 +52,12 @@ fun CoinDetailScreen(
     state: CoinListState,
     modifier: Modifier = Modifier
 ) {
-    val contentColor = if(isSystemInDarkTheme()) {
+    val contentColor = if (isSystemInDarkTheme()) {
         Color.White
     } else {
         Color.Black
     }
-    if(state.isLoading) {
+    if (state.isLoading) {
         Box(
             modifier = modifier
                 .fillMaxSize(),
@@ -66,7 +65,7 @@ fun CoinDetailScreen(
         ) {
             CircularProgressIndicator()
         }
-    } else if(state.selectedCoin != null) {
+    } else if (state.selectedCoin != null) {
         val coin = state.selectedCoin
         Column(
             modifier = modifier
@@ -115,20 +114,19 @@ fun CoinDetailScreen(
                     (coin.priceUsd.value * (coin.changePercent24Hr.value / 100))
                         .toDisplayableNumber()
                 val isPositive = coin.changePercent24Hr.value > 0.0
-                val contentColor = if(isPositive) {
-                    if(isSystemInDarkTheme()) Color.Green else greenBackground
-                } else {
-                    MaterialTheme.colorScheme.error
-                }
                 InfoCard(
                     title = stringResource(id = R.string.change_last_24h),
                     formattedText = absoluteChangeFormatted.formatted,
-                    icon = if(isPositive) {
+                    icon = if (isPositive) {
                         ImageVector.vectorResource(id = R.drawable.trending)
                     } else {
                         ImageVector.vectorResource(id = R.drawable.trending_down)
                     },
-                    contentColor = contentColor
+                    contentColor = if (isPositive) {
+                        if (isSystemInDarkTheme()) Color.Green else greenBackground
+                    } else {
+                        MaterialTheme.colorScheme.error
+                    }
                 )
             }
             AnimatedVisibility(
@@ -143,7 +141,7 @@ fun CoinDetailScreen(
                 var totalChartWidth by remember {
                     mutableFloatStateOf(0f)
                 }
-                val amountOfVisibleDataPoints = if(labelWidth > 0) {
+                val amountOfVisibleDataPoints = if (labelWidth > 0) {
                     ((totalChartWidth - 2.5 * labelWidth) / labelWidth).toInt()
                 } else {
                     0
