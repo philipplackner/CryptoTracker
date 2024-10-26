@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -21,6 +24,7 @@ import com.plcoding.cryptotracker.crypto.presentation.coin_list.components.CoinL
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.components.previewCoin
 import com.plcoding.cryptotracker.crypto.presentation.models.CoinUi
 import com.plcoding.cryptotracker.ui.theme.CryptoTrackerTheme
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -42,6 +46,21 @@ fun CoinListContent(
     actions: CoinListAction,
     modifier: Modifier = Modifier
 ) {
+    val lazyListState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(true) {
+        scope.launch {
+            val coin = state.coins.firstOrNull {
+                it.id == state.selectedCoin?.id
+            }
+            coin?.let { item ->
+                val itemIndex = state.coins.indexOf(item)
+                lazyListState.scrollToItem(itemIndex)
+            }
+
+        }
+    }
+
     if (state.isLoading) {
         Box(
             modifier = modifier
@@ -52,6 +71,7 @@ fun CoinListContent(
         }
     } else {
         LazyColumn(
+            state = lazyListState,
             modifier = modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
