@@ -11,17 +11,33 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.components.CoinListItem
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.components.previewCoin
 import com.plcoding.cryptotracker.crypto.presentation.models.CoinUi
 import com.plcoding.cryptotracker.ui.theme.CryptoTrackerTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CoinListScreen(
+    viewModel: CoinListViewModel = koinViewModel(),
+    modifier: Modifier = Modifier
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    CoinListContent(
+        state = state,
+        actions = viewModel,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CoinListContent(
     state: CoinListState,
     actions: CoinListAction,
     modifier: Modifier = Modifier
@@ -56,7 +72,7 @@ fun CoinListScreen(
 @Composable
 private fun CoinListScreenPreview() {
     CryptoTrackerTheme {
-        CoinListScreen(
+        CoinListContent(
             state = CoinListState(
                 coins = (1..100).map {
                     previewCoin.copy(id = it.toString())

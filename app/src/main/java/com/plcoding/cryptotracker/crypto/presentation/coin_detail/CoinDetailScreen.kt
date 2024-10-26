@@ -39,16 +39,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plcoding.cryptotracker.R
 import com.plcoding.cryptotracker.crypto.presentation.coin_detail.components.InfoCard
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListState
+import com.plcoding.cryptotracker.crypto.presentation.coin_list.CoinListViewModel
 import com.plcoding.cryptotracker.crypto.presentation.coin_list.components.previewCoin
 import com.plcoding.cryptotracker.crypto.presentation.models.toDisplayableNumber
 import com.plcoding.cryptotracker.ui.theme.CryptoTrackerTheme
 import com.plcoding.cryptotracker.ui.theme.greenBackground
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CoinDetailScreen(
+    viewModel: CoinListViewModel = koinViewModel(),
+    modifier: Modifier = Modifier
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    CoinDetailContent(
+        state = state,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CoinDetailContent(
     state: CoinListState,
     modifier: Modifier = Modifier
 ) {
@@ -185,7 +200,7 @@ fun CoinDetailScreen(
 @Composable
 private fun CoinDetailScreenPreview() {
     CryptoTrackerTheme {
-        CoinDetailScreen(
+        CoinDetailContent(
             state = CoinListState(
                 selectedCoin = previewCoin,
             ),

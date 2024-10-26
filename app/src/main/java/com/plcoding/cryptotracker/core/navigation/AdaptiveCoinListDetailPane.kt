@@ -9,10 +9,8 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plcoding.cryptotracker.core.presentation.util.ObserveAsEvents
 import com.plcoding.cryptotracker.core.presentation.util.toString
 import com.plcoding.cryptotracker.crypto.presentation.coin_detail.CoinDetailScreen
@@ -26,7 +24,6 @@ fun AdaptiveCoinListDetailPane(
     modifier: Modifier = Modifier,
     viewModel: CoinListViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
     ObserveAsEvents(events = viewModel.events) { event ->
@@ -47,15 +44,12 @@ fun AdaptiveCoinListDetailPane(
         navigator = navigator,
         listPane = {
             AnimatedPane {
-                CoinListScreen(
-                    state = state,
-                    actions = viewModel
-                )
+                CoinListScreen()
             }
         },
         detailPane = {
             AnimatedPane {
-                CoinDetailScreen(state = state)
+                CoinDetailScreen()
             }
         },
         modifier = modifier
