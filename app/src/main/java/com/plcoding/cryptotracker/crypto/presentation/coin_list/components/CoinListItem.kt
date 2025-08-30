@@ -20,8 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,17 +31,17 @@ import com.plcoding.cryptotracker.ui.theme.CryptoTrackerTheme
 @Composable
 fun CoinListItem(
     coinUi: CoinUi,
-    onClick: () -> Unit,
+    onClick: (CoinUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val contentColor = if(isSystemInDarkTheme()) {
+    val contentColor = if (isSystemInDarkTheme()) {
         Color.White
     } else {
         Color.Black
     }
     Row(
         modifier = modifier
-            .clickable(onClick = onClick)
+            .clickable(onClick = { onClick(coinUi) })
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
